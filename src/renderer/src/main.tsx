@@ -4,7 +4,7 @@ import './assets/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 scan({
-  enabled: true
+  enabled: false
 })
 
 import { RouterProvider, createRouter } from '@tanstack/react-router'
