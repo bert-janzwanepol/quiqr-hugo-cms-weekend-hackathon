@@ -8,30 +8,17 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as ProjectsIndexImport } from './routes/projects/index'
 import { Route as ProjectsCreateImport } from './routes/projects/create'
-import { Route as ProjectsLayoutImport } from './routes/projects/_layout'
 import { Route as ProjectsProjectIdIndexImport } from './routes/projects/$projectId/index'
 import { Route as ProjectsProjectIdMenuSectionIndexImport } from './routes/projects/$projectId/$menuSection/index'
 import { Route as ProjectsProjectIdMenuSectionMenuItemImport } from './routes/projects/$projectId/$menuSection/$menuItem'
 
-// Create Virtual Routes
-
-const ProjectsImport = createFileRoute('/projects')()
-
 // Create/Update Routes
-
-const ProjectsRoute = ProjectsImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -40,40 +27,35 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const ProjectsIndexRoute = ProjectsIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProjectsCreateRoute = ProjectsCreateImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => ProjectsRoute,
-} as any)
-
-const ProjectsLayoutRoute = ProjectsLayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/create',
+  path: '/projects/create',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProjectsProjectIdIndexRoute = ProjectsProjectIdIndexImport.update({
-  id: '/$projectId/',
-  path: '/$projectId/',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/$projectId/',
+  path: '/projects/$projectId/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProjectsProjectIdMenuSectionIndexRoute =
   ProjectsProjectIdMenuSectionIndexImport.update({
-    id: '/$projectId/$menuSection/',
-    path: '/$projectId/$menuSection/',
-    getParentRoute: () => ProjectsRoute,
+    id: '/projects/$projectId/$menuSection/',
+    path: '/projects/$projectId/$menuSection/',
+    getParentRoute: () => rootRoute,
   } as any)
 
 const ProjectsProjectIdMenuSectionMenuItemRoute =
   ProjectsProjectIdMenuSectionMenuItemImport.update({
-    id: '/$projectId/$menuSection/$menuItem',
-    path: '/$projectId/$menuSection/$menuItem',
-    getParentRoute: () => ProjectsRoute,
+    id: '/projects/$projectId/$menuSection/$menuItem',
+    path: '/projects/$projectId/$menuSection/$menuItem',
+    getParentRoute: () => rootRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -87,89 +69,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsImport
-      parentRoute: typeof rootRoute
-    }
-    '/projects/_layout': {
-      id: '/projects/_layout'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsLayoutImport
-      parentRoute: typeof ProjectsRoute
-    }
     '/projects/create': {
       id: '/projects/create'
-      path: '/create'
+      path: '/projects/create'
       fullPath: '/projects/create'
       preLoaderRoute: typeof ProjectsCreateImport
-      parentRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
     }
     '/projects/': {
       id: '/projects/'
-      path: '/'
-      fullPath: '/projects/'
+      path: '/projects'
+      fullPath: '/projects'
       preLoaderRoute: typeof ProjectsIndexImport
-      parentRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
     }
     '/projects/$projectId/': {
       id: '/projects/$projectId/'
-      path: '/$projectId'
+      path: '/projects/$projectId'
       fullPath: '/projects/$projectId'
       preLoaderRoute: typeof ProjectsProjectIdIndexImport
-      parentRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
     }
     '/projects/$projectId/$menuSection/$menuItem': {
       id: '/projects/$projectId/$menuSection/$menuItem'
-      path: '/$projectId/$menuSection/$menuItem'
+      path: '/projects/$projectId/$menuSection/$menuItem'
       fullPath: '/projects/$projectId/$menuSection/$menuItem'
       preLoaderRoute: typeof ProjectsProjectIdMenuSectionMenuItemImport
-      parentRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
     }
     '/projects/$projectId/$menuSection/': {
       id: '/projects/$projectId/$menuSection/'
-      path: '/$projectId/$menuSection'
+      path: '/projects/$projectId/$menuSection'
       fullPath: '/projects/$projectId/$menuSection'
       preLoaderRoute: typeof ProjectsProjectIdMenuSectionIndexImport
-      parentRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface ProjectsRouteChildren {
-  ProjectsLayoutRoute: typeof ProjectsLayoutRoute
-  ProjectsCreateRoute: typeof ProjectsCreateRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
-  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
-  ProjectsProjectIdMenuSectionMenuItemRoute: typeof ProjectsProjectIdMenuSectionMenuItemRoute
-  ProjectsProjectIdMenuSectionIndexRoute: typeof ProjectsProjectIdMenuSectionIndexRoute
-}
-
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsLayoutRoute: ProjectsLayoutRoute,
-  ProjectsCreateRoute: ProjectsCreateRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
-  ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
-  ProjectsProjectIdMenuSectionMenuItemRoute:
-    ProjectsProjectIdMenuSectionMenuItemRoute,
-  ProjectsProjectIdMenuSectionIndexRoute:
-    ProjectsProjectIdMenuSectionIndexRoute,
-}
-
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/projects': typeof ProjectsLayoutRoute
   '/projects/create': typeof ProjectsCreateRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemRoute
   '/projects/$projectId/$menuSection': typeof ProjectsProjectIdMenuSectionIndexRoute
@@ -177,8 +120,8 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/projects': typeof ProjectsIndexRoute
   '/projects/create': typeof ProjectsCreateRoute
+  '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemRoute
   '/projects/$projectId/$menuSection': typeof ProjectsProjectIdMenuSectionIndexRoute
@@ -187,8 +130,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/projects': typeof ProjectsRouteWithChildren
-  '/projects/_layout': typeof ProjectsLayoutRoute
   '/projects/create': typeof ProjectsCreateRoute
   '/projects/': typeof ProjectsIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
@@ -200,25 +141,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/projects'
     | '/projects/create'
-    | '/projects/'
+    | '/projects'
     | '/projects/$projectId'
     | '/projects/$projectId/$menuSection/$menuItem'
     | '/projects/$projectId/$menuSection'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/projects'
     | '/projects/create'
+    | '/projects'
     | '/projects/$projectId'
     | '/projects/$projectId/$menuSection/$menuItem'
     | '/projects/$projectId/$menuSection'
   id:
     | '__root__'
     | '/'
-    | '/projects'
-    | '/projects/_layout'
     | '/projects/create'
     | '/projects/'
     | '/projects/$projectId/'
@@ -229,12 +167,22 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProjectsRoute: typeof ProjectsRouteWithChildren
+  ProjectsCreateRoute: typeof ProjectsCreateRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
+  ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
+  ProjectsProjectIdMenuSectionMenuItemRoute: typeof ProjectsProjectIdMenuSectionMenuItemRoute
+  ProjectsProjectIdMenuSectionIndexRoute: typeof ProjectsProjectIdMenuSectionIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProjectsRoute: ProjectsRouteWithChildren,
+  ProjectsCreateRoute: ProjectsCreateRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
+  ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
+  ProjectsProjectIdMenuSectionMenuItemRoute:
+    ProjectsProjectIdMenuSectionMenuItemRoute,
+  ProjectsProjectIdMenuSectionIndexRoute:
+    ProjectsProjectIdMenuSectionIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -248,16 +196,6 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/projects"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/projects": {
-      "filePath": "projects",
-      "children": [
-        "/projects/_layout",
         "/projects/create",
         "/projects/",
         "/projects/$projectId/",
@@ -265,29 +203,23 @@ export const routeTree = rootRoute
         "/projects/$projectId/$menuSection/"
       ]
     },
-    "/projects/_layout": {
-      "filePath": "projects/_layout.tsx",
-      "parent": "/projects"
+    "/": {
+      "filePath": "index.tsx"
     },
     "/projects/create": {
-      "filePath": "projects/create.tsx",
-      "parent": "/projects"
+      "filePath": "projects/create.tsx"
     },
     "/projects/": {
-      "filePath": "projects/index.tsx",
-      "parent": "/projects"
+      "filePath": "projects/index.tsx"
     },
     "/projects/$projectId/": {
-      "filePath": "projects/$projectId/index.tsx",
-      "parent": "/projects"
+      "filePath": "projects/$projectId/index.tsx"
     },
     "/projects/$projectId/$menuSection/$menuItem": {
-      "filePath": "projects/$projectId/$menuSection/$menuItem.tsx",
-      "parent": "/projects"
+      "filePath": "projects/$projectId/$menuSection/$menuItem.tsx"
     },
     "/projects/$projectId/$menuSection/": {
-      "filePath": "projects/$projectId/$menuSection/index.tsx",
-      "parent": "/projects"
+      "filePath": "projects/$projectId/$menuSection/index.tsx"
     }
   }
 }
