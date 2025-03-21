@@ -21,15 +21,15 @@ function ProjectDetail() {
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
         <div>
           <h2>Collections config</h2>
-          <pre className="select-auto whitespace-pre-wrap">
+          <code className="select-auto whitespace-pre-wrap break-words">
             {JSON.stringify(projectData.collectionsConfig)}
-          </pre>
+          </code>
         </div>
         <div>
           <h2>Singles config</h2>
-          <pre className="select-auto whitespace-pre-wrap">
+          <code className="select-auto whitespace-pre-wrap break-words">
             {JSON.stringify(projectData.singlesConfig)}
-          </pre>
+          </code>
         </div>
       </div>
     </>
