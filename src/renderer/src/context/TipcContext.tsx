@@ -118,10 +118,10 @@ export function useTipc() {
 // eslint-disable-next-line
 export function useCurrentProject(): UseQueryResult<ValidatedProject, Error> {
   const { client, getCurrentProjectParams } = useTipc()
-  const params = getCurrentProjectParams()
+  const { projectName, projectPath } = getCurrentProjectParams()
 
   return client.loadAndValidateConfigs.useQuery(
-    { projectPath: params.projectPath, projectName: params.projectName },
-    { enabled: Boolean(params.projectPath) && params.projectName !== '' }
+    { projectPath, projectName },
+    { enabled: Boolean(projectPath) && projectName !== '' }
   )
 }
