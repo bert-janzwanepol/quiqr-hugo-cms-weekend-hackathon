@@ -1,4 +1,4 @@
-import { BaseConfig, Field } from './config-base'
+import { BaseConfig, Field } from '../schemas'
 
 export interface SingleConfig extends BaseConfig {
   file?: string

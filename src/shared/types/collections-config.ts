@@ -1,4 +1,4 @@
-import { BaseConfig } from './config-base'
+import { BaseConfig } from '../schemas'
 
 export interface CollectionConfig extends BaseConfig {
   folder: string

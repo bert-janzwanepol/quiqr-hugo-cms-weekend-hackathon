@@ -1,7 +1,7 @@
 import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import App from '../App'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 
 export interface RouterContext {
   breadcrumb?: string | ((params: Record<string, string>) => string)
@@ -56,7 +56,9 @@ const RootComponent = () => {
   return (
     <>
       <App />
-      <TanStackRouterDevtools position="bottom-right" />
+      <Suspense>
+        <TanStackRouterDevtools position="bottom-right" />
+      </Suspense>
     </>
   )
 }

@@ -110,7 +110,7 @@ export const router = {
          * The indexed configs have O(1) lookup time
          * because they are HashMaps: [key: {...data}, someotherkey: {...data}]
          */
-        const indexedSingles = createIndexedConfig(singlesConfig)
+        const indexedSingles = createIndexedConfig<SingleConfig>(singlesConfig)
         const indexedCollections = createIndexedConfig<CollectionConfig>(collectionsConfig)
 
         /**

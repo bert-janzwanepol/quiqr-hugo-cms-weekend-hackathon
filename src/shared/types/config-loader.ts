@@ -99,6 +99,12 @@ export async function loadPartialConfig(
   return loadConfig<CollectionConfig[] | SingleConfig[]>(filePath)
 }
 
+// export async function loadDataConfig<T>(filepath: string) {
+//   // TODO:
+//   // List the directory content
+//   // Every directory
+// }
+
 export function mergePartialConfig(
   baseConfig: SingleConfig,
   partialConfig: Partial<SingleConfig>

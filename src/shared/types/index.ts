@@ -1,23 +1,6 @@
 import { CollectionConfig, MenuConfig, SingleConfig } from '../schemas'
-
 export interface IndexedSinglesConfig {
-  [key: string]: {
-    title?: string
-    file?: string
-    previewUrl?: string
-    _mergePartial?: string
-    hidePreviewIcon?: boolean
-    hideExternalEditIcon?: boolean
-    hideSaveButton?: boolean
-    fields?: Array<{
-      key: string
-      type?: string
-      title?: string
-      multiLine?: boolean
-      arrayTitle?: boolean
-      hidden?: boolean
-    }>
-  }
+  [key: string]: Omit<SingleConfig, 'key'>
 }
 
 export interface IndexedMenuConfig {
@@ -25,26 +8,7 @@ export interface IndexedMenuConfig {
 }
 
 export interface IndexedCollectionsConfig {
-  [key: string]: {
-    title?: string
-    folder: string
-    extension: string
-    dataformat: string
-    itemtitle: string
-    hideIndex?: boolean
-    previewUrlBase?: string
-    _mergePartial?: string
-    sortkey?: string
-    hidePreviewIcon?: boolean
-    fields?: Array<{
-      key: string
-      type?: string
-      title?: string
-      multiLine?: boolean
-      arrayTitle?: boolean
-      hidden?: boolean
-    }>
-  }
+  [key: string]: Omit<CollectionConfig, 'key'>
 }
 
 export interface ValidatedProject {
