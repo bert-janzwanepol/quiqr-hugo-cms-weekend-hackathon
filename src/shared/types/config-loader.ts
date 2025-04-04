@@ -13,6 +13,7 @@ import {
   IndexedMenuConfig
 } from '../types'
 import { merge, keyBy } from 'lodash'
+import matter from 'gray-matter'
 
 export async function loadConfig<T>(filePath: string): Promise<T> {
   const content = await fs.readFile(filePath, 'utf8')
@@ -98,12 +99,154 @@ export async function loadPartialConfig(
 ): Promise<CollectionConfig[] | SingleConfig[]> {
   return loadConfig<CollectionConfig[] | SingleConfig[]>(filePath)
 }
+/**
+ * Interface for directory entry with metadata
+ */
+export interface DirectoryEntry {
+  name: string
+  path: string
+  isDirectory: boolean
+  children?: DirectoryEntry[]
+}
 
-// export async function loadDataConfig<T>(filepath: string) {
-//   // TODO:
-//   // List the directory content
-//   // Every directory
-// }
+/**
+ * Interface for markdown content with metadata
+ */
+export interface MarkdownContent<T = unknown> {
+  content: string
+  metadata: T
+  path: string
+}
+
+/**
+ * Lists directory contents recursively
+ *
+ * @param dirPath - Path to directory
+ * @param recursive - Whether to recursively list subdirectories
+ * @returns Promise with array of DirectoryEntry objects
+ */
+export async function listDirectory(dirPath: string, recursive = true): Promise<DirectoryEntry[]> {
+  try {
+    const entries = await fs.readdir(dirPath, { withFileTypes: true })
+    const result: DirectoryEntry[] = []
+
+    for (const entry of entries) {
+      const entryPath = path.join(dirPath, entry.name)
+      const dirEntry: DirectoryEntry = {
+        name: entry.name,
+        path: entryPath,
+        isDirectory: entry.isDirectory()
+      }
+
+      if (entry.isDirectory() && recursive) {
+        dirEntry.children = await listDirectory(entryPath, recursive)
+      }
+
+      result.push(dirEntry)
+    }
+
+    return result
+  } catch (error) {
+    throw new Error(
+      `Failed to list directory ${dirPath}: ${error instanceof Error ? error.message : String(error)}`
+    )
+  }
+}
+
+/**
+ * Loads markdown file content and frontmatter metadata using gray-matter
+ *
+ * @param filePath - Path to markdown file
+ * @returns Promise with markdown content and metadata
+ */
+export async function loadMarkdownFile<T = unknown>(filePath: string): Promise<MarkdownContent<T>> {
+  try {
+    const content = await fs.readFile(filePath, 'utf8')
+
+    // Parse frontmatter with gray-matter
+    const { data, content: markdownContent } = matter(content)
+
+    return {
+      content: markdownContent,
+      metadata: data as T,
+      path: filePath
+    }
+  } catch (error) {
+    throw new Error(
+      `Failed to load markdown file ${filePath}: ${error instanceof Error ? error.message : String(error)}`
+    )
+  }
+}
+
+/**
+ * Loads data from a directory structure where each subdirectory has an index.md file
+ *
+ * @param dirPath - Path to the parent directory
+ * @returns Promise with array of MarkdownContent from each subdirectory's index.md
+ */
+export async function loadDataDirectory<T = unknown>(
+  dirPath: string
+): Promise<MarkdownContent<T>[]> {
+  // Get all subdirectories
+  const entries = await listDirectory(dirPath, false)
+  const subdirectories = entries.filter((entry) => entry.isDirectory)
+
+  // Load index.md from each subdirectory
+  const results: MarkdownContent<T>[] = []
+
+  for (const subdir of subdirectories) {
+    const indexPath = path.join(subdir.path, 'index.md')
+
+    try {
+      // Check if index.md exists
+      await fs.access(indexPath)
+
+      // Load the markdown file
+      const markdownContent = await loadMarkdownFile<T>(indexPath)
+      results.push(markdownContent)
+    } catch (error) {
+      // Skip directories without index.md
+      console.warn(`No index.md found in ${subdir.path}`)
+      console.error(error)
+    }
+  }
+
+  return results
+}
+
+/**
+ * Loads a specific markdown file based on a path structure
+ *
+ * @param basePath - Base directory path
+ * @param subPath - Subpath to locate the specific markdown file
+ * @returns Promise with MarkdownContent
+ */
+export async function loadMarkdownByPath<T = unknown>(
+  basePath: string,
+  subPath: string
+): Promise<MarkdownContent<T>> {
+  // Normalize the subpath to remove leading/trailing slashes
+  const normalizedSubPath = subPath.replace(/^\/+|\/+$/g, '')
+
+  // Determine if we're looking for an index.md or a specific markdown file
+  let fullPath: string
+
+  if (normalizedSubPath.endsWith('.md')) {
+    // Direct path to a markdown file
+    fullPath = path.join(basePath, normalizedSubPath)
+  } else {
+    // Path to a directory, look for index.md
+    fullPath = path.join(basePath, normalizedSubPath, 'index.md')
+  }
+
+  try {
+    return await loadMarkdownFile<T>(fullPath)
+  } catch (error) {
+    throw new Error(
+      `Failed to load markdown at path ${subPath}: ${error instanceof Error ? error.message : String(error)}`
+    )
+  }
+}
 
 export function mergePartialConfig(
   baseConfig: SingleConfig,

@@ -11,7 +11,9 @@ import {
   createEnhancedMenuConfig,
   validateMenuReferences,
   getMenuItemTitle,
-  createIndexedConfig
+  createIndexedConfig,
+  loadDataDirectory,
+  listDirectory
 } from '../shared/types/config-loader'
 import { MenuConfig, CollectionConfig, SingleConfig } from '../shared/schemas'
 import {
@@ -71,6 +73,54 @@ export const router = {
       return []
     }
   }),
+
+  listDataDirectory: t.procedure
+    .input<{ projectPath: string; projectName: string; contentDirPath: string }>()
+    .action(async ({ input }): Promise<unknown> => {
+      try {
+        const siteConfig = await loadSiteConfig(
+          path.join(input.projectPath, input.projectName, 'config.json')
+        )
+
+        const fullPath = path.join(
+          input.projectPath,
+          input.projectName,
+          siteConfig.source.path,
+          input.contentDirPath
+        )
+
+        const data = await listDirectory(fullPath)
+
+        return data
+      } catch (error) {
+        console.error('Error loading configs:', error)
+        throw error
+      }
+    }),
+
+  loadAndValidateData: t.procedure
+    .input<{ projectPath: string; projectName: string; contentDirPath: string }>()
+    .action(async ({ input }): Promise<unknown> => {
+      try {
+        const siteConfig = await loadSiteConfig(
+          path.join(input.projectPath, input.projectName, 'config.json')
+        )
+
+        const fullPath = path.join(
+          input.projectPath,
+          input.projectName,
+          siteConfig.source.path,
+          input.contentDirPath
+        )
+
+        const data = await loadDataDirectory(fullPath)
+
+        return data
+      } catch (error) {
+        console.error('Error loading configs:', error)
+        throw error
+      }
+    }),
 
   loadAndValidateConfigs: t.procedure
     .input<{ projectPath: string; projectName: string }>()

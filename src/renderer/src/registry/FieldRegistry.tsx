@@ -18,6 +18,7 @@ class FieldRegistry {
   public constructor() {
     this.components = {
       string: () => import('./components/StringField'),
+      markdown: () => import('./components/Markdown'),
       notFound: () => import('./components/NotFound')
     }
   }

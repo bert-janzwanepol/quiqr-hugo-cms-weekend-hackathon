@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCurrentProject } from '../../../../context/TipcContext'
+import { useCurrentProject, useTipc } from '../../../../context/TipcContext'
 import FieldRenderer from '../../../../registry/FieldRenderer'
+import { useEffect } from 'react'
+import { isCollectionConfig, isCollectionConfigEntry } from '../../../../../../shared/types'
 
 export const Route = createFileRoute('/projects/$projectId/$menuSection/$menuItem')({
   component: RouteComponent,
@@ -11,6 +13,9 @@ export const Route = createFileRoute('/projects/$projectId/$menuSection/$menuIte
 
 function RouteComponent() {
   const { data: currentProject } = useCurrentProject()
+  const { client, getCurrentProjectParams } = useTipc()
+  const { projectName, projectPath } = getCurrentProjectParams()
+
   const { menuItem } = Route.useParams()
 
   const configFromSingles = currentProject?.indexedSingles[menuItem]
@@ -27,14 +32,29 @@ function RouteComponent() {
     return <div>No fields to display in this config.</div>
   }
 
+  // we can not put the hook useQuery in an if statement
+  // because conditional hooks are not allowed in React.
+  // @see https://react.dev/reference/rules/rules-of-hooks
+  const folder = 'folder' in config ? config.folder : ''
+  const { data } = client.listDataDirectory.useQuery(
+    {
+      projectPath,
+      projectName,
+      contentDirPath: folder
+    },
+    {
+      enabled: folder != ''
+    }
+  )
+
   return (
     <div>
-      {config.fields.map((field) => (
+      {/* {config.fields.map((field) => (
         <FieldRenderer key={`${field.key}-${field.type}`} field={field} />
-      ))}
+      ))} */}
 
       <pre className="select-all whitespace-pre-wrap break-words user-select-auto">
-        {JSON.stringify(config, null, 2)}
+        {JSON.stringify(data, null, 2)}
       </pre>
     </div>
   )

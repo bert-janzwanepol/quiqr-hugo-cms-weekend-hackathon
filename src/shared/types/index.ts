@@ -11,6 +11,24 @@ export interface IndexedCollectionsConfig {
   [key: string]: Omit<CollectionConfig, 'key'>
 }
 
+/**
+ * Type guard to check if a config is a CollectionConfig by checking
+ * if it has a folder property
+ */
+export function isCollectionConfig(
+  config: IndexedSinglesConfig | IndexedCollectionsConfig
+): config is IndexedCollectionsConfig {
+  return 'folder' in config && typeof config.folder === 'string'
+}
+
+/**
+ * Type guard to check if a config is a SingleConfig by checking
+ * that it doesn't have a folder property
+ */
+export function isSingleConfig(config: SingleConfig | CollectionConfig): config is SingleConfig {
+  return !('folder' in config)
+}
+
 export interface ValidatedProject {
   menuConfig: MenuConfig
   enhancedMenuConfig: EnhancedMenuConfig
