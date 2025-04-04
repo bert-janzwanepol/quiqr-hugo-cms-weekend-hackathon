@@ -25,6 +25,9 @@ export async function loadConfig<T>(filePath: string): Promise<T> {
     return yaml.load(content) as T
   } else if (ext === '.toml') {
     return toml.parse(content) as T
+  } else if (ext === '.md') {
+    const markdown = matter(content)
+    return markdown as T
   } else {
     throw new Error(`Unsupported file extension: ${ext}`)
   }
@@ -190,6 +193,8 @@ export async function loadDataDirectory<T = unknown>(
   // Get all subdirectories
   const entries = await listDirectory(dirPath, false)
   const subdirectories = entries.filter((entry) => entry.isDirectory)
+
+  console.log(subdirectories)
 
   // Load index.md from each subdirectory
   const results: MarkdownContent<T>[] = []

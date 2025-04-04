@@ -13,7 +13,9 @@ import {
   getMenuItemTitle,
   createIndexedConfig,
   loadDataDirectory,
-  listDirectory
+  listDirectory,
+  DirectoryEntry,
+  loadConfig
 } from '../shared/types/config-loader'
 import { MenuConfig, CollectionConfig, SingleConfig } from '../shared/schemas'
 import {
@@ -76,7 +78,7 @@ export const router = {
 
   listDataDirectory: t.procedure
     .input<{ projectPath: string; projectName: string; contentDirPath: string }>()
-    .action(async ({ input }): Promise<unknown> => {
+    .action(async ({ input }): Promise<DirectoryEntry[]> => {
       try {
         const siteConfig = await loadSiteConfig(
           path.join(input.projectPath, input.projectName, 'config.json')
@@ -97,8 +99,38 @@ export const router = {
         throw error
       }
     }),
+  loadDataFile: t.procedure
+    .input<{
+      projectPath: string
+      projectName: string
+      contentDirPath: string
+      filename: string
+    }>()
+    .action(async ({ input }): Promise<CollectionConfig['fields']> => {
+      try {
+        const siteConfig = await loadSiteConfig(
+          path.join(input.projectPath, input.projectName, 'config.json')
+        )
 
-  loadAndValidateData: t.procedure
+        const fullPath = path.join(
+          input.projectPath,
+          input.projectName,
+          siteConfig.source.path,
+          input.contentDirPath,
+          input.filename
+        )
+
+        console.log(fullPath)
+
+        const data = await loadConfig<CollectionConfig['fields']>(fullPath)
+
+        return data
+      } catch (error) {
+        console.error('Error loading configs:', error)
+        throw error
+      }
+    }),
+  loadAndValidateDataDirectory: t.procedure
     .input<{ projectPath: string; projectName: string; contentDirPath: string }>()
     .action(async ({ input }): Promise<unknown> => {
       try {

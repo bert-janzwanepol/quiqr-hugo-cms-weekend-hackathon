@@ -16,7 +16,8 @@ import { Route as ProjectsIndexImport } from './routes/projects/index'
 import { Route as ProjectsCreateImport } from './routes/projects/create'
 import { Route as ProjectsProjectIdIndexImport } from './routes/projects/$projectId/index'
 import { Route as ProjectsProjectIdMenuSectionIndexImport } from './routes/projects/$projectId/$menuSection/index'
-import { Route as ProjectsProjectIdMenuSectionMenuItemImport } from './routes/projects/$projectId/$menuSection/$menuItem'
+import { Route as ProjectsProjectIdMenuSectionMenuItemIndexImport } from './routes/projects/$projectId/$menuSection/$menuItem/index'
+import { Route as ProjectsProjectIdMenuSectionMenuItemCollectionConfigImport } from './routes/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
 
 // Create/Update Routes
 
@@ -51,10 +52,17 @@ const ProjectsProjectIdMenuSectionIndexRoute =
     getParentRoute: () => rootRoute,
   } as any)
 
-const ProjectsProjectIdMenuSectionMenuItemRoute =
-  ProjectsProjectIdMenuSectionMenuItemImport.update({
-    id: '/projects/$projectId/$menuSection/$menuItem',
-    path: '/projects/$projectId/$menuSection/$menuItem',
+const ProjectsProjectIdMenuSectionMenuItemIndexRoute =
+  ProjectsProjectIdMenuSectionMenuItemIndexImport.update({
+    id: '/projects/$projectId/$menuSection/$menuItem/',
+    path: '/projects/$projectId/$menuSection/$menuItem/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute =
+  ProjectsProjectIdMenuSectionMenuItemCollectionConfigImport.update({
+    id: '/projects/$projectId/$menuSection/$menuItem/$collectionConfig',
+    path: '/projects/$projectId/$menuSection/$menuItem/$collectionConfig',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -90,18 +98,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdIndexImport
       parentRoute: typeof rootRoute
     }
-    '/projects/$projectId/$menuSection/$menuItem': {
-      id: '/projects/$projectId/$menuSection/$menuItem'
-      path: '/projects/$projectId/$menuSection/$menuItem'
-      fullPath: '/projects/$projectId/$menuSection/$menuItem'
-      preLoaderRoute: typeof ProjectsProjectIdMenuSectionMenuItemImport
-      parentRoute: typeof rootRoute
-    }
     '/projects/$projectId/$menuSection/': {
       id: '/projects/$projectId/$menuSection/'
       path: '/projects/$projectId/$menuSection'
       fullPath: '/projects/$projectId/$menuSection'
       preLoaderRoute: typeof ProjectsProjectIdMenuSectionIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/projects/$projectId/$menuSection/$menuItem/$collectionConfig': {
+      id: '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+      path: '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+      fullPath: '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+      preLoaderRoute: typeof ProjectsProjectIdMenuSectionMenuItemCollectionConfigImport
+      parentRoute: typeof rootRoute
+    }
+    '/projects/$projectId/$menuSection/$menuItem/': {
+      id: '/projects/$projectId/$menuSection/$menuItem/'
+      path: '/projects/$projectId/$menuSection/$menuItem'
+      fullPath: '/projects/$projectId/$menuSection/$menuItem'
+      preLoaderRoute: typeof ProjectsProjectIdMenuSectionMenuItemIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -114,8 +129,9 @@ export interface FileRoutesByFullPath {
   '/projects/create': typeof ProjectsCreateRoute
   '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemRoute
   '/projects/$projectId/$menuSection': typeof ProjectsProjectIdMenuSectionIndexRoute
+  '/projects/$projectId/$menuSection/$menuItem/$collectionConfig': typeof ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute
+  '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,8 +139,9 @@ export interface FileRoutesByTo {
   '/projects/create': typeof ProjectsCreateRoute
   '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemRoute
   '/projects/$projectId/$menuSection': typeof ProjectsProjectIdMenuSectionIndexRoute
+  '/projects/$projectId/$menuSection/$menuItem/$collectionConfig': typeof ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute
+  '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemIndexRoute
 }
 
 export interface FileRoutesById {
@@ -133,8 +150,9 @@ export interface FileRoutesById {
   '/projects/create': typeof ProjectsCreateRoute
   '/projects/': typeof ProjectsIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
-  '/projects/$projectId/$menuSection/$menuItem': typeof ProjectsProjectIdMenuSectionMenuItemRoute
   '/projects/$projectId/$menuSection/': typeof ProjectsProjectIdMenuSectionIndexRoute
+  '/projects/$projectId/$menuSection/$menuItem/$collectionConfig': typeof ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute
+  '/projects/$projectId/$menuSection/$menuItem/': typeof ProjectsProjectIdMenuSectionMenuItemIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -144,24 +162,27 @@ export interface FileRouteTypes {
     | '/projects/create'
     | '/projects'
     | '/projects/$projectId'
-    | '/projects/$projectId/$menuSection/$menuItem'
     | '/projects/$projectId/$menuSection'
+    | '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+    | '/projects/$projectId/$menuSection/$menuItem'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/projects/create'
     | '/projects'
     | '/projects/$projectId'
-    | '/projects/$projectId/$menuSection/$menuItem'
     | '/projects/$projectId/$menuSection'
+    | '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+    | '/projects/$projectId/$menuSection/$menuItem'
   id:
     | '__root__'
     | '/'
     | '/projects/create'
     | '/projects/'
     | '/projects/$projectId/'
-    | '/projects/$projectId/$menuSection/$menuItem'
     | '/projects/$projectId/$menuSection/'
+    | '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
+    | '/projects/$projectId/$menuSection/$menuItem/'
   fileRoutesById: FileRoutesById
 }
 
@@ -170,8 +191,9 @@ export interface RootRouteChildren {
   ProjectsCreateRoute: typeof ProjectsCreateRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
-  ProjectsProjectIdMenuSectionMenuItemRoute: typeof ProjectsProjectIdMenuSectionMenuItemRoute
   ProjectsProjectIdMenuSectionIndexRoute: typeof ProjectsProjectIdMenuSectionIndexRoute
+  ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute: typeof ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute
+  ProjectsProjectIdMenuSectionMenuItemIndexRoute: typeof ProjectsProjectIdMenuSectionMenuItemIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -179,10 +201,12 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsCreateRoute: ProjectsCreateRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
-  ProjectsProjectIdMenuSectionMenuItemRoute:
-    ProjectsProjectIdMenuSectionMenuItemRoute,
   ProjectsProjectIdMenuSectionIndexRoute:
     ProjectsProjectIdMenuSectionIndexRoute,
+  ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute:
+    ProjectsProjectIdMenuSectionMenuItemCollectionConfigRoute,
+  ProjectsProjectIdMenuSectionMenuItemIndexRoute:
+    ProjectsProjectIdMenuSectionMenuItemIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -199,8 +223,9 @@ export const routeTree = rootRoute
         "/projects/create",
         "/projects/",
         "/projects/$projectId/",
-        "/projects/$projectId/$menuSection/$menuItem",
-        "/projects/$projectId/$menuSection/"
+        "/projects/$projectId/$menuSection/",
+        "/projects/$projectId/$menuSection/$menuItem/$collectionConfig",
+        "/projects/$projectId/$menuSection/$menuItem/"
       ]
     },
     "/": {
@@ -215,11 +240,14 @@ export const routeTree = rootRoute
     "/projects/$projectId/": {
       "filePath": "projects/$projectId/index.tsx"
     },
-    "/projects/$projectId/$menuSection/$menuItem": {
-      "filePath": "projects/$projectId/$menuSection/$menuItem.tsx"
-    },
     "/projects/$projectId/$menuSection/": {
       "filePath": "projects/$projectId/$menuSection/index.tsx"
+    },
+    "/projects/$projectId/$menuSection/$menuItem/$collectionConfig": {
+      "filePath": "projects/$projectId/$menuSection/$menuItem/$collectionConfig.tsx"
+    },
+    "/projects/$projectId/$menuSection/$menuItem/": {
+      "filePath": "projects/$projectId/$menuSection/$menuItem/index.tsx"
     }
   }
 }
