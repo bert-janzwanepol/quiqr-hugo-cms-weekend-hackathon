@@ -18,7 +18,7 @@ import {
 import { Link, useRouter } from '@tanstack/react-router'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { AlertCircle, ChevronDown } from 'lucide-react'
-import { useCurrentProject } from '../context/TipcContext'
+import { useCurrentProject } from '@/lib/hooks/use-current-project'
 import { getMenuItemTitle } from '../../../shared/types/config-loader'
 import { Alert, AlertTitle, AlertDescription } from './ui/alert'
 import { ModeToggle } from './theme-toggle'

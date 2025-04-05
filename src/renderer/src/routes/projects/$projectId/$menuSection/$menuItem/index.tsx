@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useCurrentProject, useTipc } from '../../../../../context/TipcContext'
+import { useCurrentProject } from '@/lib/hooks/use-current-project'
+import { useTipc } from '@/lib/hooks/use-tipc'
+
 import {
   Table,
   TableBody,

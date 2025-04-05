@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCurrentProject } from '../../../context/TipcContext'
+import { useCurrentProject } from '@/lib/hooks/use-current-project'
 
 export const Route = createFileRoute('/projects/$projectId/')({
   component: ProjectDetail,

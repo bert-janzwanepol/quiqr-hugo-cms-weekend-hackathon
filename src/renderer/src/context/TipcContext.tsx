@@ -1,25 +1,7 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { client, handlers } from '../client'
 import { Register } from '@tanstack/react-router'
-import { ValidatedProject } from '../../../shared/types'
-import { UseQueryResult } from '@tanstack/react-query'
-interface TipcContextType {
-  client: typeof client
-  paths: {
-    userData: string
-    homePath: string
-    quiqrHome: string
-  }
-  getCurrentProjectName: () => string
-  getCurrentProjectParams: () => {
-    projectPath: string
-    projectName: string
-    enabled: boolean
-  }
-  openProject: (projectId: string) => void
-}
-
-const TipcContext = createContext<TipcContextType | null>(null)
+import { TipcContext, TipcContextType } from '../lib/hooks/use-tipc'
 
 interface TipcProviderProps {
   children: React.ReactNode
@@ -102,26 +84,4 @@ export function TipcProvider({ children, router }: TipcProviderProps) {
   }
 
   return <TipcContext.Provider value={value}>{children}</TipcContext.Provider>
-}
-
-// TODO: move to lib/hooks so vites hmr works
-// eslint-disable-next-line
-export function useTipc() {
-  const context = useContext(TipcContext)
-  if (!context) {
-    throw new Error('useTipc must be used within a TipcProvider')
-  }
-  return context
-}
-
-// TODO: move to lib/hooks so hmr works
-// eslint-disable-next-line
-export function useCurrentProject(): UseQueryResult<ValidatedProject, Error> {
-  const { client, getCurrentProjectParams } = useTipc()
-  const { projectName, projectPath } = getCurrentProjectParams()
-
-  return client.loadAndValidateConfigs.useQuery(
-    { projectPath, projectName },
-    { enabled: Boolean(projectPath) && projectName !== '' }
-  )
 }

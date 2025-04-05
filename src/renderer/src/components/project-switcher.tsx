@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
-import { useTipc } from '../context/TipcContext'
+import { useTipc } from '@/lib/hooks/use-tipc'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 

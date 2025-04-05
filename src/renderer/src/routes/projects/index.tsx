@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useTipc } from '@/context/TipcContext'
+import { useTipc } from '@/lib/hooks/use-tipc'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, PlusIcon } from 'lucide-react'
