@@ -16,8 +16,27 @@ import { merge, keyBy } from 'lodash'
 import matter from 'gray-matter'
 
 export async function loadConfig<T>(filePath: string): Promise<T> {
-  const content = await fs.readFile(filePath, 'utf8')
-  const ext = path.extname(filePath).toLowerCase()
+  const stats = await fs.stat(filePath)
+
+  let actualFilePath = filePath
+
+  if (stats.isDirectory()) {
+    const files = await fs.readdir(filePath)
+
+    if (files.length === 0) {
+      throw new Error(`Directory is empty: ${filePath}`)
+    }
+
+    if (files.length > 1) {
+      console.warn(`Multiple files found in directory ${filePath}, using ${files[0]}`)
+    }
+
+    actualFilePath = path.join(filePath, files[0])
+  }
+
+  // Read the file content
+  const content = await fs.readFile(actualFilePath, 'utf8')
+  const ext = path.extname(actualFilePath).toLowerCase()
 
   if (ext === '.json') {
     return JSON.parse(content) as T

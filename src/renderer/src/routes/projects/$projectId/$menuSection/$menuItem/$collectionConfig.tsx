@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCurrentProject, useTipc } from '../../../../../context/TipcContext'
 import { useEffect } from 'react'
+import FieldRenderer from '@/registry/FieldRenderer'
+import { useCurrentProject } from '@/lib/hooks/use-current-project'
+import { useTipc } from '@/lib/hooks/use-tipc'
 
 export const Route = createFileRoute(
   '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
@@ -35,12 +37,11 @@ function RouteComponent() {
 
   // const config = currentProject?.collectionsConfig[menuItem][collectionConfig]
 
-  // return config.fields.map((field) => (
-  //   <FieldRenderer key={`${field.key}-${field.type}`} field={field} />
-  // ))
   return (
-    <pre className="select-all whitespace-pre-wrap break-words user-select-auto">
-      {JSON.stringify(data, null, 2)}
-    </pre>
+    <div>
+      {config?.fields?.map((field) => (
+        <FieldRenderer key={`${field.key}-${field.type}`} field={field} />
+      ))}
+    </div>
   )
 }
