@@ -11,8 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 export const Route = createFileRoute('/projects/')({
   component: ProjectsIndex,
   beforeLoad: () => ({
-    breadcrumb: (params) => {
-      console.log(params)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    breadcrumb: (_params) => {
       return 'Projects'
     }
   })

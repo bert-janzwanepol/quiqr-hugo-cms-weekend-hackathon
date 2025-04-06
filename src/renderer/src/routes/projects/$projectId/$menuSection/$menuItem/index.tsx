@@ -47,7 +47,6 @@ function RouteComponent() {
    * @see https://react.dev/reference/rules/rules-of-hooks
    */
   const folder = 'folder' in config ? config.folder : ''
-  console.log(menuItem, menuSection, folder)
   const { data } = client.listDataDirectory.useQuery(
     {
       projectPath,
@@ -67,8 +66,6 @@ function RouteComponent() {
       </pre>
     )
   }
-
-  console.log(data)
 
   return (
     <div>

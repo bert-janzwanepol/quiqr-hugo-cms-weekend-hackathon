@@ -211,6 +211,14 @@ export const siteConfigSchema = z.object({
   transform: z.array(z.unknown()).optional()
 })
 
+export const grayMatterParseResultSchema = z.object({
+  content: z.string(),
+  data: z.record(z.any()),
+  excerpt: z.string(),
+  isEmpty: z.boolean(),
+  orig: z.record(z.string(), z.number())
+})
+
 export {
   baseFieldSchema,
   fieldSchema,
@@ -250,3 +258,5 @@ export type MenuSection = z.infer<typeof menuSectionSchema>
 export type MenuConfig = z.infer<typeof menuSchema>
 export type PublConf = z.infer<typeof publConfSchema>
 export type SiteConfig = z.infer<typeof siteConfigSchema>
+
+export type GrayMatterParseResult = z.infer<typeof grayMatterParseResultSchema>

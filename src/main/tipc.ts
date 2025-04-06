@@ -17,7 +17,12 @@ import {
   DirectoryEntry,
   loadConfig
 } from '../shared/types/config-loader'
-import { MenuConfig, CollectionConfig, SingleConfig } from '../shared/schemas'
+import {
+  MenuConfig,
+  CollectionConfig,
+  SingleConfig,
+  GrayMatterParseResult
+} from '../shared/schemas'
 import {
   ValidatedProject,
   EnhancedMenuItem,
@@ -106,7 +111,7 @@ export const router = {
       contentDirPath: string
       filename: string
     }>()
-    .action(async ({ input }): Promise<CollectionConfig['fields']> => {
+    .action(async ({ input }): Promise<GrayMatterParseResult> => {
       try {
         const siteConfig = await loadSiteConfig(
           path.join(input.projectPath, input.projectName, 'config.json')
@@ -120,9 +125,7 @@ export const router = {
           input.filename
         )
 
-        console.log(fullPath)
-
-        const data = await loadConfig<CollectionConfig['fields']>(fullPath)
+        const data = await loadConfig<GrayMatterParseResult>(fullPath)
 
         return data
       } catch (error) {

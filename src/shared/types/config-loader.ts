@@ -213,8 +213,6 @@ export async function loadDataDirectory<T = unknown>(
   const entries = await listDirectory(dirPath, false)
   const subdirectories = entries.filter((entry) => entry.isDirectory)
 
-  console.log(subdirectories)
-
   // Load index.md from each subdirectory
   const results: MarkdownContent<T>[] = []
 
