@@ -11,6 +11,8 @@ export interface IndexedCollectionsConfig {
   [key: string]: Omit<CollectionConfig, 'key'>
 }
 
+export type CollectionConfigValue = IndexedCollectionsConfig[string]
+
 /**
  * Type guard to check if a config is a CollectionConfig by checking
  * if it has a folder property

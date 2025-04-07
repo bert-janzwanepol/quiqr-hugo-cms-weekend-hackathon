@@ -145,7 +145,7 @@ export const collectionConfigSchema = z.object({
   _mergePartial: z.string().optional(),
   sortkey: z.string().optional(),
   hidePreviewIcon: z.boolean().optional(),
-  fields: z.array(fieldSchema).optional()
+  fields: z.array(fieldSchema)
 })
 
 export const menuItemSchema = z.object({

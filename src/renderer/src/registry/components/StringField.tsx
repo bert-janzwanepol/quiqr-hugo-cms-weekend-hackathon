@@ -1,22 +1,16 @@
 import { Field } from '../../../../shared/schemas'
+import { Input } from '../../components/ui/input'
+import { Textarea } from '../../components/ui/textarea'
 import useCollectionData from '../../lib/hooks/use-collection-data'
 
 function StringField({ field }: { field: Field }) {
   const config = useCollectionData()
 
-  if (!config || !config.data) {
-    return <div className="text-red-500">no data found for key {field.key}</div>
+  if ('multiline' in field && field.multiline === true) {
+    return <Textarea defaultValue={config?.data[field.key] || ''} />
   }
 
-  if (config.data[field.key] === undefined) {
-    return <div className="text-red-500">{`field ${field.key} is undefined`}</div>
-  }
-
-  if (config.data[field.key] === '') {
-    return <div className="text-red-500">{`field ${field.key} is an empty string`}</div>
-  }
-
-  return <div>{config.data[field.key]} </div>
+  return <Input defaultValue={config?.data[field.key] || ''} type="text" />
 }
 
 export default StringField

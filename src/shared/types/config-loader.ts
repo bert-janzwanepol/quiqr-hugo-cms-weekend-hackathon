@@ -12,7 +12,7 @@ import {
   MissingMenuItemError,
   IndexedMenuConfig
 } from '../types'
-import { merge, keyBy } from 'lodash'
+import { mergeWith, keyBy } from 'lodash'
 import matter from 'gray-matter'
 
 export async function loadConfig<T>(filePath: string): Promise<T> {
@@ -317,7 +317,21 @@ function mergeConfigItem<T extends { key: string; [key: string]: unknown }>(
   baseItem: T,
   partialItem: unknown
 ): T {
-  return merge({}, partialItem, baseItem)
+  // we can not use lodash' merge here, because fields with different types
+  // might have the same key. So when we encounter the field object, we simply concat
+  // the two arrays, instead of deep merging.
+  return mergeWith(
+    {},
+    baseItem,
+    partialItem,
+    (objValue: unknown, srcValue: unknown, _key: string) => {
+      if (Array.isArray(objValue) && Array.isArray(srcValue) && _key === 'field') {
+        return objValue.concat(srcValue)
+      }
+
+      return undefined
+    }
+  )
 }
 
 export function createIndexedConfig<T extends { key: string }>(
