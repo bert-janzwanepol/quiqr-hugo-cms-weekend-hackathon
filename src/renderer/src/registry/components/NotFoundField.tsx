@@ -1,6 +1,6 @@
-import { Field } from '../../../../shared/schemas'
+import { FieldRendererProps } from '../FieldRenderer'
 
-function NotFound({ field }: { field: Field }) {
+function NotFoundField({ field }: FieldRendererProps) {
   return (
     <div className="text-red-600">
       Fieldtype <span className="font-bold">{field.type}</span> with key{' '}
@@ -9,4 +9,4 @@ function NotFound({ field }: { field: Field }) {
   )
 }
 
-export default NotFound
+export default NotFoundField

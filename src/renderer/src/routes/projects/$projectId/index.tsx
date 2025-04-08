@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useCurrentProject } from '@/lib/hooks/use-current-project'
+import ConfigViewer from '../../../components/config-viewer'
 
 export const Route = createFileRoute('/projects/$projectId/')({
   component: ProjectDetail,
@@ -21,15 +22,11 @@ function ProjectDetail() {
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
         <div>
           <h2>Collections config</h2>
-          <pre className="select-all whitespace-pre-wrap break-words">
-            {JSON.stringify(projectData.collectionsConfig, null, 2)}
-          </pre>
+          <ConfigViewer config={projectData.collectionsConfig} />
         </div>
         <div>
           <h2>Singles config</h2>
-          <pre className="select-all whitespace-pre-wrap break-words user-select-auto">
-            {JSON.stringify(projectData.singlesConfig, null, 2)}
-          </pre>
+          <ConfigViewer config={projectData.singlesConfig} />
         </div>
       </div>
     </>

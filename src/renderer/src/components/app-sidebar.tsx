@@ -48,7 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {menuSection.menuItems.map((item) => {
-                      const url = `/projects/${currentProject.projectName}/${menuSection.title}/${item.key}`
+                      const url = `/projects/${currentProject.projectName}/${menuSection.title}/${item.key}/`
                       const menuItemTitle = getMenuItemTitle(
                         item,
                         currentProject.indexedSingles,

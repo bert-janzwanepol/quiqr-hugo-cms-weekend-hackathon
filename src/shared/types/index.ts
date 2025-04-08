@@ -12,13 +12,18 @@ export interface IndexedCollectionsConfig {
 }
 
 export type CollectionConfigValue = IndexedCollectionsConfig[string]
+export type SingleConfigValue = IndexedSinglesConfig[string]
 
 /**
  * Type guard to check if a config is a CollectionConfig by checking
  * if it has a folder property
  */
 export function isCollectionConfig(
-  config: IndexedSinglesConfig | IndexedCollectionsConfig
+  config:
+    | IndexedSinglesConfig
+    | IndexedCollectionsConfig
+    | CollectionConfigValue
+    | SingleConfigValue
 ): config is IndexedCollectionsConfig {
   return 'folder' in config && typeof config.folder === 'string'
 }
@@ -27,7 +32,9 @@ export function isCollectionConfig(
  * Type guard to check if a config is a SingleConfig by checking
  * that it doesn't have a folder property
  */
-export function isSingleConfig(config: SingleConfig | CollectionConfig): config is SingleConfig {
+export function isSingleConfig(
+  config: CollectionConfigValue | SingleConfigValue
+): config is SingleConfig {
   return !('folder' in config)
 }
 

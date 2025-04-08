@@ -68,7 +68,9 @@ export function TipcProvider({ children, router }: TipcProviderProps) {
     try {
       router.navigate({
         to: '/projects/$projectId',
-        params: { projectId }
+        params: {
+          projectId
+        }
       })
     } catch (error) {
       console.error('Error navigating to project:', error)

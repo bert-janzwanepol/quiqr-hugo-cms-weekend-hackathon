@@ -124,7 +124,7 @@ const baseConfigSchema = z.object({
 export const singleConfigSchema = z.object({
   key: z.string(),
   title: z.string().optional(),
-  file: z.string().optional(),
+  file: z.string(),
   previewUrl: z.string().optional(),
   _mergePartial: z.string().optional(),
   hidePreviewIcon: z.boolean().optional(),

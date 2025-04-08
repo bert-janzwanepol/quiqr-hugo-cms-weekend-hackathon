@@ -1,16 +1,13 @@
-import { Field } from '../../../../shared/schemas'
 import { Input } from '../../components/ui/input'
 import { Textarea } from '../../components/ui/textarea'
-import useCollectionData from '../../lib/hooks/use-collection-data'
+import { FieldRendererProps } from '../FieldRenderer'
 
-function StringField({ field }: { field: Field }) {
-  const config = useCollectionData()
-
+function StringField({ field, data }: FieldRendererProps) {
   if ('multiline' in field && field.multiline === true) {
-    return <Textarea defaultValue={config?.data[field.key] || ''} />
+    return <Textarea defaultValue={data.data[field.key] || ''} />
   }
 
-  return <Input defaultValue={config?.data[field.key] || ''} type="text" />
+  return <Input defaultValue={data.data[field.key] || ''} type="text" />
 }
 
 export default StringField

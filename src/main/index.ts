@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -40,6 +40,24 @@ function createWindow(): BrowserWindow {
       handlers.setHomeDirectoryPath.send(app.getPath('home'))
       handlers.setQuiqrHomeDirectoryPath.send(app.getPath('home') + '/Quiqr/sites')
     })
+
+    const refreshShortcut = process.platform === 'darwin' ? 'Command+R' : 'Control+R'
+    globalShortcut.register(refreshShortcut, () => {
+      if (mainWindow.isFocused()) {
+        mainWindow.webContents.reload()
+      }
+    })
+
+    globalShortcut.register('F5', () => {
+      if (mainWindow.isFocused()) {
+        mainWindow.webContents.reload()
+      }
+    })
+  })
+
+  mainWindow.on('closed', () => {
+    // Unregister shortcuts when window is closed
+    globalShortcut.unregisterAll()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

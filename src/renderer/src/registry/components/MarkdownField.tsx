@@ -1,24 +1,40 @@
 import '@mdxeditor/editor/style.css'
-import { MDXEditor, UndoRedo, BoldItalicUnderlineToggles, toolbarPlugin } from '@mdxeditor/editor'
-import { Field } from '../../../../shared/schemas'
-import useCollectionData from '../../lib/hooks/use-collection-data'
+import {
+  MDXEditor,
+  UndoRedo,
+  BoldItalicUnderlineToggles,
+  toolbarPlugin,
+  frontmatterPlugin,
+  InsertFrontmatter,
+  headingsPlugin,
+  MDXEditorMethods,
+  CreateLink
+} from '@mdxeditor/editor'
+import { FieldRendererProps } from '../FieldRenderer'
+import { useEffect, useRef } from 'react'
 
-function MarkdownField({ field }: { field: Field }) {
-  const config = useCollectionData()
+function MarkdownField({ field, data }: FieldRendererProps) {
+  const editorRef = useRef<MDXEditorMethods>(null)
 
-  // same early returns
-
+  useEffect(() => {
+    console.log(data.content)
+    editorRef.current?.setMarkdown(data.content)
+  }, [data.content])
   return (
     <MDXEditor
-      readOnly={config?.data[field.key]}
-      markdown={config?.data[field.key] || ''}
+      ref={editorRef}
+      markdown={data.data[field.key] || data.content}
       plugins={[
+        frontmatterPlugin(),
+        headingsPlugin(),
         toolbarPlugin({
           toolbarClassName: 'my-classname',
           toolbarContents: () => (
             <>
               <UndoRedo />
               <BoldItalicUnderlineToggles />
+              <InsertFrontmatter />
+              <CreateLink />
             </>
           )
         })

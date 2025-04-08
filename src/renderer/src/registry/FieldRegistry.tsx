@@ -1,10 +1,11 @@
-import { Field } from '../../../shared/schemas'
+import { Field, GrayMatterParseResult } from '../../../shared/schemas'
 
 // This type represents a function that returns a Promise resolving to a component
 // The component expects a field of type T
 export type TypedFieldImporter<T extends Field = Field> = () => Promise<{
   default: React.ComponentType<{
     field: T
+    data: GrayMatterParseResult | undefined
     [key: string]: unknown
   }>
 }>
@@ -17,9 +18,10 @@ class FieldRegistry {
 
   public constructor() {
     this.components = {
-      string: () => import('./components/StringField'),
       markdown: () => import('./components/MarkdownField'),
-      notFound: () => import('./components/NotFound')
+      notFound: () => import('./components/NotFoundField'),
+      string: () => import('./components/StringField'),
+      boolean: () => import('./components/SwitchField')
     }
   }
 

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow
 } from '../../../../../components/ui/table'
-import { Route as CollectionConfigRoute } from './$collectionConfig'
+import { Route as CollectionConfigRoute, ConfigForm } from './$collectionConfig'
 
 export const Route = createFileRoute('/projects/$projectId/$menuSection/$menuItem/')({
   component: RouteComponent,
@@ -30,10 +30,10 @@ function RouteComponent() {
   const configFromCollections = currentProject?.indexedCollections[menuItem]
 
   // Determine which config to use
-  const config = configFromSingles || configFromCollections
+  const config = configFromCollections || configFromSingles
 
   if (!config) {
-    return <div>Config for key {menuItem} not found in sinlges or collections.</div>
+    return <div>Config for key {menuItem} not found in singles or collections.</div>
   }
 
   if (!config.fields) {
@@ -60,11 +60,7 @@ function RouteComponent() {
 
   // if there is no data, this is a singles config, not a collection
   if (!data) {
-    return (
-      <pre className="select-all whitespace-pre-wrap break-words user-select-auto">
-        {JSON.stringify(config, null, 2)}
-      </pre>
-    )
+    return <ConfigForm config={config} />
   }
 
   return (
@@ -111,10 +107,6 @@ function RouteComponent() {
           ))}
         </TableBody>
       </Table>
-
-      <pre className="select-all whitespace-pre-wrap break-words user-select-auto">
-        {JSON.stringify(config, null, 2)}
-      </pre>
     </div>
   )
 }

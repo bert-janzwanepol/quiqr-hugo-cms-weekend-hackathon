@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import FieldRenderer from '@/registry/FieldRenderer'
 import { useCurrentProject } from '@/lib/hooks/use-current-project'
-import { CollectionConfigValue } from '../../../../../../../shared/types'
+import {
+  CollectionConfigValue,
+  isCollectionConfig,
+  isSingleConfig,
+  SingleConfigValue
+} from '../../../../../../../shared/types'
 import { z } from 'zod'
 import { fieldSchema } from '../../../../../../../shared/schemas'
 import { useForm } from 'react-hook-form'
@@ -15,7 +20,9 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Button } from '../../../../../components/ui/button'
-// import { useEffect } from 'react'
+import useCollectionData from '../../../../../lib/hooks/use-collection-data'
+import useSingleData from '../../../../../lib/hooks/use-single-data'
+import ConfigViewer from '../../../../../components/config-viewer'
 
 export const Route = createFileRoute(
   '/projects/$projectId/$menuSection/$menuItem/$collectionConfig'
@@ -33,48 +40,74 @@ function RouteComponent() {
     return <div className="text-red-500">No collection config found for item {menuItem}</div>
   }
 
-  return (
-    <div className="max-w-[65ch]">
-      <CollectionForm config={config} />
-    </div>
-  )
+  return <ConfigForm config={config} />
 }
 
-const CollectionForm = ({ config }: { config: CollectionConfigValue }) => {
+export const ConfigForm = ({ config }: { config: CollectionConfigValue | SingleConfigValue }) => {
   const form = useForm<z.infer<typeof fieldSchema>>({
     resolver: zodResolver(fieldSchema),
     defaultValues: config['fields']
   })
 
+  // TODO: move this to context probably so we don't have to prop drill
+  const collectionData = useCollectionData()
+  let filepath = ''
+  if (isSingleConfig(config)) {
+    filepath = config.file
+  }
+  const singleData = useSingleData({ filename: filepath })
+  let data = collectionData
+  if (!isCollectionConfig(config) && isSingleConfig(config)) {
+    data = singleData
+  }
+
+  if (!data) {
+    return (
+      <div className="text-red-500">
+        No data found for config
+        <ConfigViewer config={filepath} />
+      </div>
+    )
+  }
+
   function onSubmit(values: z.infer<typeof fieldSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values)
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {config?.fields?.map((configField) => (
-          <FormField
-            key={`${configField.key}-${configField.type}`}
-            control={form.control}
-            name="username"
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{configField.title || configField.key}</FormLabel>
-                <FormControl>
-                  <FieldRenderer field={configField} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+    <div className="max-w-[65ch]">
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            form.handleSubmit(onSubmit)
+          }}
+          className="space-y-8"
+        >
+          {config?.fields?.map((configField) => (
+            <FormField
+              key={`${configField.key}-${configField.type}`}
+              control={form.control}
+              name="username"
+              render={() => (
+                <FormItem>
+                  <FormLabel>{configField.title || configField.key}</FormLabel>
+                  <FormControl>
+                    <FieldRenderer field={configField} data={data} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
 
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      <div className="flex gap-8">
+        {/* <ConfigViewer config={config} /> */}
+        <ConfigViewer config={data} />
+      </div>
+    </div>
   )
 }

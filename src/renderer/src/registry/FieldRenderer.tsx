@@ -1,16 +1,21 @@
 import React, { Suspense, lazy, ComponentType } from 'react'
 import { fieldRegistry } from './FieldRegistry'
-import { Field } from '../../../shared/schemas'
+import { Field, GrayMatterParseResult } from '../../../shared/schemas'
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorField from './components/ErrorField'
 
-interface FieldRendererProps {
+export interface FieldRendererProps {
   field: Field
+  data: GrayMatterParseResult
   fallback?: React.ReactNode
 }
 
 /**
  * Dynamically loads a field component based on its type
  */
-const loadComponent = (type: string): ComponentType<{ field: Field }> => {
+const loadComponent = (
+  type: string
+): ComponentType<{ field: Field; data: GrayMatterParseResult | undefined }> => {
   const importer = fieldRegistry.getComponent(type)
   return lazy(importer)
 }
@@ -20,15 +25,18 @@ const loadComponent = (type: string): ComponentType<{ field: Field }> => {
  */
 function FieldRenderer({
   field,
+  data,
   fallback = <div>Loading field...</div>,
   ...props
 }: FieldRendererProps): JSX.Element {
   const FieldComponent = loadComponent(field.type)
 
   return (
-    <Suspense fallback={fallback}>
-      <FieldComponent field={field} {...props} />
-    </Suspense>
+    <ErrorBoundary fallbackRender={ErrorField}>
+      <Suspense fallback={fallback}>
+        <FieldComponent field={field} data={data} {...props} />
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 

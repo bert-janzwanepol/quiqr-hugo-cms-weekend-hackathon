@@ -8,14 +8,15 @@ function useCollectionData(): GrayMatterParseResult | undefined {
   const matchRoute = useMatchRoute()
   const params = matchRoute({ to: CollectionRoute.id })
 
-  if (!params || !params.menuItem || !params.collectionConfig) {
-    throw new Error('Not on a Collection Route')
-  }
-
   const { data: currentProject } = useCurrentProject()
   const { client, getCurrentProjectParams } = useTipc()
 
   const { projectName, projectPath } = getCurrentProjectParams()
+
+  if (!params || !params.menuItem || !params.collectionConfig) {
+    return undefined
+  }
+
   const config = currentProject?.indexedCollections[params.menuItem]
 
   const { data } = client.loadDataFile.useQuery(
@@ -29,6 +30,7 @@ function useCollectionData(): GrayMatterParseResult | undefined {
       enabled: Boolean(config?.folder) && Boolean(params.collectionConfig)
     }
   )
+
   return data
 }
 
