@@ -2,16 +2,16 @@ import { Field, GrayMatterParseResult } from '../../../shared/schemas'
 
 // This type represents a function that returns a Promise resolving to a component
 // The component expects a field of type T
-export type TypedFieldImporter<T extends Field = Field> = () => Promise<{
+export type TypedFieldImporter<T extends Field = Field, D = GrayMatterParseResult> = () => Promise<{
   default: React.ComponentType<{
     field: T
-    data: GrayMatterParseResult | undefined
+    data: D
     [key: string]: unknown
   }>
 }>
 
-// Enhance the existing FieldImporter type to work with the Field type
-export type FieldImporter = TypedFieldImporter<Field>
+// The base FieldImporter type uses Field and GrayMatterParseResult
+export type FieldImporter = TypedFieldImporter<Field, GrayMatterParseResult>
 
 class FieldRegistry {
   private components: Record<string, FieldImporter>
